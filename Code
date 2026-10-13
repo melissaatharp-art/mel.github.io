@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Home OS</title>
+
+    <!-- Mobile App Capabilities -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Home OS">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Web Application Manifest (Data URI for Instant PWA support) -->
+    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkhvbWUgT3BlcmF0aW5nIFN5c3RlbSIsCiAgInNob3J0X25hbWUiOiAiSG9tZSBPUyIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGYxNzJhIiwKICAidGhlbWVfY29sb3IiOiAiIzBmMTcyYSIKZX0=">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --accent: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 70px; /* Space for mobile navigation bar */
+        }
+
+        /* Top Header */
+        header {
+            padding: 20px 20px 12px 20px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Main Scrollable View */
+        main {
+            padding: 16px;
+            flex: 1;
+        }
+
+        .section-view {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-view.active {
+            display: flex;
+        }
+
+        /* Mobile-Optimized Cards */
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        button.add-btn {
+            background-color: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .item-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg);
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item.completed span {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.2rem;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Mobile Bottom Tab Bar */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 33%;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+        }
+
+        .nav-tab-icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">⚡ Home OS</div>
+        <h1 id="tab-title">Routines & Cleaning</h1>
+    </header>
+
+    <main>
+        <!-- ROUTINES VIEW -->
+        <section id="routines" class="section-view active">
+            <div class="card">
+                <span class="card-title">Morning Routine</span>
+                <div class="input-group">
+                    <input type="text" id="morning-input" placeholder="Add morning task...">
+                    <button class="add-btn" onclick="addItem('morning-list', 'morning-input')">Add</button>
+                </div>
+                <ul class="item-list" id="morning-list"></ul>
+            </div>
+
+            <div class="card">
+                <span class="card-title">Evening Routine</span>
+                <div class="input-group">
+                    <input type="text" id="evening-input" placeholder="Add evening task...">
+                    <button class="add-btn" onclick="addItem('evening-list', 'evening-input')">Add</button>
+                </div>
+                <ul class="item-list" id="evening-list"></ul>
+            </div>
+
+            <div class="card">
+                <span class="card-title">Cleaning Tasks</span>
+                <div class="input-group">
+                    <input type="text" id="cleaning-input" placeholder="Add chore...">
+                    <button class="add-btn" onclick="addItem('cleaning-list', 'cleaning-input')">Add</button>
+                </div>
+                <ul class="item-list" id="cleaning-list"></ul>
+            </div>
+        </section>
+
+        <!-- MEALS & GROCERY VIEW -->
+        <section id="planning" class="section-view">
+            <div class="card">
+                <span class="card-title">Weekly Meal Plan</span>
+                <div class="input-group">
+                    <input type="text" id="meal-input" placeholder="Day: Dish name...">
+                    <button class="add-btn" onclick="addItem('meal-list', 'meal-input')">Add</button>
+                </div>
+                <ul class="item-list" id="meal-list"></ul>
+            </div>
+
+            <div class="card">
+                <span class="card-title">Grocery List</span>
+                <div class="input-group">
+                    <input type="text" id="grocery-input" placeholder="Add grocery item...">
+                    <button class="add-btn" onclick="addItem('grocery-list', 'grocery-input')">Add</button>
+                </div>
+                <ul class="item-list" id="grocery-list"></ul>
+            </div>
+        </section>
+
+        <!-- MAINTENANCE VIEW -->
+        <section id="maintenance" class="section-view">
+            <div class="card">
+                <span class="card-title">Appointments</span>
+                <div class="input-group">
+                    <input type="text" id="appt-input" placeholder="Doctor, Vet, Event...">
+                    <button class="add-btn" onclick="addItem('appt-list', 'appt-input')">Add</button>
+                </div>
+                <ul class="item-list" id="appt-list"></ul>
+            </div>
+
+            <div class="card">
+                <span class="card-title">Home Maintenance</span>
+                <div class="input-group">
+                    <input type="text" id="maint-input" placeholder="Filters, Gutter clean...">
+                    <button class="add-btn" onclick="addItem('maint-list', 'maint-input')">Add</button>
+                </div>
+                <ul class="item-list" id="maint-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation Bar for Mobile -->
+    <nav class="bottom-nav">
+        <button class="nav-tab active" onclick="switchTab(event, 'routines', 'Routines & Cleaning')">
+            <span class="nav-tab-icon">🧹</span>
+            <span>Routines</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab(event, 'planning', 'Meals & Grocery')">
+            <span class="nav-tab-icon">🥗</span>
+            <span>Meals</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab(event, 'maintenance', 'Schedule & Ops')">
+            <span class="nav-tab-icon">🛠️</span>
+            <span>Maintenance</span>
+        </button>
+    </nav>
+
+    <script>
+        const initialData = {
+            'morning-list': ['Hydrate (500ml water)', '10-min stretch', 'Make bed'],
+            'evening-list': ['Reset kitchen counters', 'Set out tomorrow clothing', '10 PM screen off'],
+            'cleaning-list': ['Wipe bathroom surfaces', 'Vacuum main rug', 'Run dishwasher'],
+            'meal-list': ['Mon: Sheet Pan Chicken', 'Tue: Tacos', 'Wed: Salmon & Rice'],
+            'grocery-list': ['Chicken Breast', 'Tortillas', 'Lemons', 'Spinach'],
+            'appt-list': ['Dentist - Thursday @ 10 AM', 'HVAC Service - March 12'],
+            'maint-list': ['Replace HVAC air filters', 'Test smoke alarms']
+        };
+
+        function initApp() {
+            Object.keys(initialData).forEach(listId => {
+                const saved = localStorage.getItem(listId);
+                const items = saved ? JSON.parse(saved) : initialData[listId].map(text => ({ text, done: false }));
+                renderList(listId, items);
+            });
+        }
+
+        function switchTab(evt, tabId, titleText) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            document.getElementById('tab-title').textContent = titleText;
+        }
+
+        function renderList(listId, items) {
+            const container = document.getElementById(listId);
+            container.innerHTML = '';
+            
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = `item ${item.done ? 'completed' : ''}`;
+                li.innerHTML = `
+                    <div class="item-left">
+                        <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleItem('${listId}', ${index})">
+                        <span>${item.text}</span>
+                    </div>
+                    <button class="delete-btn" onclick="removeItem('${listId}', ${index})">✕</button>
+                `;
+                container.appendChild(li);
+            });
+
+            localStorage.setItem(listId, JSON.stringify(items));
+        }
+
+        function addItem(listId, inputId) {
+            const input = document.getElementById(inputId);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const items = JSON.parse(localStorage.getItem(listId)) || [];
+            items.push({ text, done: false });
+            
+            renderList(listId, items);
+            input.value = '';
+        }
+
+        function toggleItem(listId, index) {
+            const items = JSON.parse(localStorage.getItem(listId));
+            items[index].done = !items[index].done;
+            renderList(listId, items);
+        }
+
+        function removeItem(listId, index) {
+            const items = JSON.parse(localStorage.getItem(listId));
+            items.splice(index, 1);
+            renderList(listId, items);
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
